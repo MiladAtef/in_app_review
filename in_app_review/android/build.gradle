@@ -1,16 +1,17 @@
 group = "dev.britannio.in_app_review"
 version = "1.0-SNAPSHOT"
 
+// Only used when this plugin's Android project is built on its own. Inside an
+// app, the app's settings.gradle decides the Android Gradle Plugin version.
 buildscript {
-    ext.kotlin_version = "2.1.0"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("com.android.tools.build:gradle:9.3.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20")
     }
 }
 
@@ -21,21 +22,20 @@ allprojects {
     }
 }
 
+// No Kotlin Gradle Plugin here: with AGP 9's built-in Kotlin the Android plugin
+// compiles the Kotlin sources itself, and when an app turns built-in Kotlin off
+// (android.builtInKotlin=false, or AGP 8) Flutter 3.44+ applies the Kotlin
+// Gradle Plugin to the plugin projects for it.
 apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
 
 android {
     namespace = "dev.britannio.in_app_review"
 
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
     }
 
     sourceSets {
@@ -45,16 +45,6 @@ android {
 
     defaultConfig {
         minSdk = 21
-    }
-
-    dependencies {
-        testImplementation("org.jetbrains.kotlin:kotlin-test")
-        testImplementation("org.mockito:mockito-core:5.0.0")
-        // Release notes: https://developer.android.com/reference/com/google/android/play/core/release-notes-in_app_reviews
-        implementation 'com.google.android.play:review:2.0.2'
-        implementation 'com.google.android.play:review-ktx:2.0.2'
-        // Release notes: https://developers.google.com/android/guides/releases
-        implementation 'com.google.android.gms:play-services-base:18.7.2'
     }
 
     testOptions {
@@ -68,4 +58,20 @@ android {
             }
         }
     }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    }
+}
+
+dependencies {
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.mockito:mockito-core:5.0.0")
+    // Release notes: https://developer.android.com/reference/com/google/android/play/core/release-notes-in_app_reviews
+    implementation 'com.google.android.play:review:2.0.2'
+    implementation 'com.google.android.play:review-ktx:2.0.2'
+    // Release notes: https://developers.google.com/android/guides/releases
+    implementation 'com.google.android.gms:play-services-base:18.7.2'
 }

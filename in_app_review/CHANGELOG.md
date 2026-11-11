@@ -1,3 +1,10 @@
+# [2.0.13]
+
+- Migrates the Android build to built-in Kotlin. The plugin no longer applies the Kotlin Gradle Plugin, so it builds under AGP 9 with `android.builtInKotlin=true`. Apps that keep built-in Kotlin off still build: Flutter 3.44+ applies the Kotlin Gradle Plugin to plugins itself.
+- Replaces `kotlinOptions` with `kotlin { compilerOptions }` and moves the Android dependencies out of the `android` block.
+- Bumps the Android compileSdk to 36.
+- Updates the minimum supported SDK version to Flutter 3.44/Dart 3.12.
+
 # [2.0.12]
 
 - Fix an Android NullPointerException that sometimes occurred when apps were backgrounded.
